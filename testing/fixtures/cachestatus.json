@@ -1,0 +1,34 @@
+[
+  {
+    "CacheStatus": "TCP_HIT",
+    "Connections": 1
+  },
+  {
+    "CacheStatus": "TCP_EXPIRED_HIT",
+    "Connections": 2
+  },
+  {
+    "CacheStatus": "TCP_MISS",
+    "Connections": 3
+  },
+  {
+    "CacheStatus": "TCP_EXPIRED_MISS",
+    "Connections": 4
+  },
+  {
+    "CacheStatus": "TCP_CLIENT_REFRESH_MISS",
+    "Connections": 5
+  },
+  {
+    "CacheStatus": "NONE",
+    "Connections": 6
+  },
+  {
+    "CacheStatus": "CONFIG_NOCACHE",
+    "Connections": 7
+  },
+  {
+    "CacheStatus": "UNCACHEABLE",
+    "Connections": 8
+  }
+]

@@ -1,0 +1,42 @@
+[
+    {
+        "Connections": 6671,
+        "StatusCode": "2xx"
+    },
+    {
+        "Connections": 131,
+        "StatusCode": "304"
+    },
+    {
+        "Connections": 0,
+        "StatusCode": "3xx"
+    },
+    {
+        "Connections": 88,
+        "StatusCode": "403"
+    },
+    {
+        "Connections": 2,
+        "StatusCode": "404"
+    },
+    {
+        "Connections": 9,
+        "StatusCode": "4xx"
+    },
+    {
+        "Connections": 0,
+        "StatusCode": "503"
+    },
+    {
+        "Connections": 0,
+        "StatusCode": "504"
+    },
+    {
+        "Connections": 0,
+        "StatusCode": "5xx"
+    },
+    {
+        "Connections": 0,
+        "StatusCode": "other"
+    }
+]

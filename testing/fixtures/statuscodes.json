@@ -1,0 +1,34 @@
+[
+  {
+    "Connections": 222,
+    "StatusCode": "2xx"
+  },
+  {
+    "Connections": 304,
+    "StatusCode": "304"
+  },
+  {
+    "Connections": 333,
+    "StatusCode": "3xx"
+  },
+  {
+    "Connections": 403,
+    "StatusCode": "403"
+  },
+  {
+    "Connections": 404,
+    "StatusCode": "404"
+  },
+  {
+    "Connections": 444,
+    "StatusCode": "4xx"
+  },
+  {
+    "Connections": 555,
+    "StatusCode": "5xx"
+  },
+  {
+    "Connections": 999,
+    "StatusCode": "other"
+  }
+]
