@@ -1,6 +1,7 @@
 # dynamically fetch path to executables
 GO_BIN := $(GOPATH)/bin
 GOMETALINTER := $(GO_BIN)/gometalinter
+UNAME_S := $(shell uname -s)
 
 # in case gometalinter is not installed already => clone it and install it
 $(GOMETALINTER):
@@ -29,8 +30,8 @@ endif
 # build docker image
 .PHONY: docker
 docker: build
-ifeq ($(OS),Windows_NT)
-	docker build -t trivago/monitoring:edgecast-v1 .
-else
+ifeq ($(UNAME_S),Linux)
 	sudo docker build -t trivago/monitoring:edgecast-v1 .
+else
+	docker build -t trivago/monitoring:edgecast-v1 .
 endif
