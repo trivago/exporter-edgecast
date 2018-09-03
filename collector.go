@@ -17,7 +17,8 @@ type EdgecastInterface interface {
 
 // EdgecastCollector needs an edgecast client that implements the given interface to fetch metrics from edgecast API
 type EdgecastCollector struct {
-	ec EdgecastInterface
+	ec        EdgecastInterface
+	platforms map[int]string
 }
 
 const (
@@ -26,14 +27,6 @@ const (
 )
 
 var (
-	// Platforms maps all possible media-types/platforms to it's IDs used in a request
-	Platforms = map[int]string{
-		2:  "flash",
-		3:  "http_large",
-		8:  "http_small",
-		14: "adn",
-	}
-
 	// Prepared Description of all fetchable metrics
 	bandwidth = prometheus.NewDesc(
 		prometheus.BuildFQName(NAMESPACE, "metrics", "bandwidth_bps"), "Current amount of bandwidth usage per platform (bits per second).", []string{"platform"}, nil,
@@ -50,8 +43,8 @@ var (
 )
 
 // NewEdgecastCollector constructs a new EdgecastCollector using a given edgecast-client that implements the EdgecastInterface
-func NewEdgecastCollector(client *EdgecastInterface) *EdgecastCollector {
-	return &EdgecastCollector{ec: *client}
+func NewEdgecastCollector(client *EdgecastInterface, platforms map[int]string) *EdgecastCollector {
+	return &EdgecastCollector{ec: *client, platforms: platforms}
 }
 
 // Describe describes all exported metrics
@@ -68,7 +61,7 @@ func (col EdgecastCollector) Describe(ch chan<- *prometheus.Desc) {
 //- implements function of interface prometheus.Collector
 func (col EdgecastCollector) Collect(ch chan<- prometheus.Metric) {
 	var collectWaitGroup sync.WaitGroup
-	for p := range Platforms { // for each possible platform concurrently
+	for p := range col.platforms { // for each possible platform concurrently
 		collectWaitGroup.Add(1)
 		go col.metrics(ch, &collectWaitGroup, p) // fetch all possible metrics concurrently
 	}

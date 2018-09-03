@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
+	"strings"
 
 	// Edgecast Client
 	"github.com/mre/edgecast"
@@ -20,9 +22,21 @@ import (
 )
 
 var (
+	// Platforms maps all possible media-types/platforms to it's IDs used in a request
+	Platforms = map[int]string{
+		2:  "flash",
+		3:  "http_large",
+		7:  "ssl_http_large",
+		8:  "http_small",
+		9:  "ssl_http_small",
+		14: "adn",
+		15: "ssl_adn",
+	}
+
 	// user-defined environment-variables that handle access to the API
-	accountID = os.Getenv("EDGECAST_ACCOUNT_ID")
-	token     = os.Getenv("EDGECAST_TOKEN")
+	accountID    = os.Getenv("EDGECAST_ACCOUNT_ID")
+	token        = os.Getenv("EDGECAST_TOKEN")
+	platformsEnv = os.Getenv("EDGECAST_PLATFORMS")
 )
 
 func main() {
@@ -31,6 +45,30 @@ func main() {
 	if len(accountID) == 0 || len(token) == 0 {
 		fmt.Println(errors.New("error: empty Account-ID or Token!\n-> Please specify using environment variables EDGECAST_ACCOUNT_ID and EDGECAST_TOKEN"))
 		os.Exit(1)
+	}
+
+	// Check if we can get the platforms to monitor from the environment.
+	// If not, use the default (monitor all platforms).
+	var platforms map[int]string
+	if len(platformsEnv) == 0 {
+		platforms = Platforms
+	} else {
+		split := strings.Split(platformsEnv, ",")
+		platforms := make(map[int]string, len(split))
+		for _, s := range split {
+			i, err := strconv.Atoi(s)
+			if err != nil {
+				fmt.Println(fmt.Errorf("Invalid platform: %s", s))
+				os.Exit(1)
+			}
+			if val, ok := Platforms[i]; ok {
+				platforms[i] = val
+			} else {
+				fmt.Println(fmt.Errorf("Invalid platform: %s", s))
+				os.Exit(1)
+			}
+
+		}
 	}
 
 	// create new logger on Stderr
@@ -65,7 +103,7 @@ func main() {
 	svc = instrumentingMiddleware{requestCount, requestLatency, requestGauge, svc}
 
 	// create the prometheus collector that uses the EdgecastClient and register it to prometheus
-	collector := NewEdgecastCollector(&svc)
+	collector := NewEdgecastCollector(&svc, platforms)
 	prometheus.MustRegister(collector)
 
 	// connect handlers
