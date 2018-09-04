@@ -39,6 +39,25 @@ var (
 	platformsEnv = os.Getenv("EDGECAST_PLATFORMS")
 )
 
+// Convert the platforms to monitor from a string to a map.
+func getPlatforms(platformsEnv string) (map[int]string, error) {
+	split := strings.Split(platformsEnv, ",")
+	platforms := make(map[int]string, len(split))
+	for _, s := range split {
+		i, err := strconv.Atoi(s)
+		if err != nil {
+			return nil, fmt.Errorf("Invalid platform: %s", s)
+		}
+
+		if val, ok := Platforms[i]; ok {
+			platforms[i] = val
+		} else {
+			return nil, fmt.Errorf("Invalid platform: %s", s)
+		}
+	}
+	return platforms, nil
+}
+
 func main() {
 
 	// check if account ID and token were properly specified using the environment variables
@@ -53,21 +72,12 @@ func main() {
 	if len(platformsEnv) == 0 {
 		platforms = Platforms
 	} else {
-		split := strings.Split(platformsEnv, ",")
-		platforms := make(map[int]string, len(split))
-		for _, s := range split {
-			i, err := strconv.Atoi(s)
+		var err error
+		if platforms, err = getPlatforms(platformsEnv); err != nil {
 			if err != nil {
-				fmt.Println(fmt.Errorf("Invalid platform: %s", s))
+				fmt.Println(err)
 				os.Exit(1)
 			}
-			if val, ok := Platforms[i]; ok {
-				platforms[i] = val
-			} else {
-				fmt.Println(fmt.Errorf("Invalid platform: %s", s))
-				os.Exit(1)
-			}
-
 		}
 	}
 
