@@ -23,6 +23,9 @@ Exporter-Edgecast uses the [edgecast-client](https://github.com/mre/edgecast) cr
     + EDGECAST_ACCOUNT_ID
     + EDGECAST_TOKEN
 - e.g. on Linux: `export EDGECAST_TOKEN=B12AC`
+- Optionally, you can also configure the queried platforms (see below for
+  possible values), e.g.:
+    + EDGECAST_PLATFORMS=3,8
 
 ### Run
 - `./bin/main` (Unix) or `.\bin\main.exe` (Windows)
@@ -90,11 +93,14 @@ See information to all the possible metrics offered by the API in the [official 
         * error
 
 ### Queried Platforms:
-| MediaTypeId | Platform                     | Naming     |
-|-------------|------------------------------|------------|
-| 2           | Flash Media Streaming        | flash      |
-| 3           | HTTP Large                   | http_large |
-| 8           | HTTP Small                   | http_small |
-| 14          | Application Delivery Network | adn        |
+| MediaTypeId | Platform                         | Naming             |
+|-------------|----------------------------------|--------------------|
+| 2           | Flash Media Streaming            | flash              |
+| 3           | HTTP Large                       | http_large         |
+| 7           | SSL HTTP Large                   | ssl_http_large     |
+| 8           | HTTP Small                       | http_small         |
+| 9           | SSL HTTP Small                   | ssl_http_small     |
+| 14          | Application Delivery Network     | adn                |
+| 15          | SSL Application Delivery Network | ssl_adn            |
 
-**Note**: MediaTypeId 7, 9, 15 refer to SSL-Traffic only for the platforms 3, 8, 14 respectively (Docs page 467) and are not queried yet.
+**Note**: MediaTypeId 7, 9, 15 refer to SSL-Traffic only for the platforms 3, 8, 14 respectively (Docs page 467).
