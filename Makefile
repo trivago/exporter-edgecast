@@ -1,30 +1,19 @@
-# dynamically fetch path to executables
-GO_BIN := $(GOPATH)/bin
-GOMETALINTER := $(GO_BIN)/gometalinter
 UNAME_S := $(shell uname -s)
 
-# in case gometalinter is not installed already => clone it and install it
-$(GOMETALINTER):
-	go get -u github.com/alecthomas/gometalinter
-	gometalinter --install &> /dev/null
-
-# fire up gometalinter to concurrently run several static analysis tools at once
+# fire up golangci-lint to concurrently run several static analysis tools at once
 .PHONY: lint
-lint: $(GOMETALINTER)
-	# recursively run gometalinter on all files in this directory, skipping packages in vendor
-	gometalinter ./... --vendor --disable=gotype
-
-.PHONY: dependencies
-dependencies:
-	dep ensure
+lint:
+	GO111MODULE=on go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
+	# recursively run golangci-lint on all files in this directory, skipping packages in vendor
+	golangci-lint run --enable-all --skip-dirs vendor
 
 # build everything in this directory into a single binary in bin-directory
 .PHONY: build
-build: dependencies
+build:
 ifeq ($(OS),Windows_NT)
-	go build -o bin/main.exe
+	GO111MODULE=on GOOS=windows GOARCH=386 go build -o bin/main.exe
 else
-	go build -o bin/main
+	GO111MODULE=on go build -o bin/main
 endif
 
 # build docker image
