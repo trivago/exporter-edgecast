@@ -1,5 +1,10 @@
 # Exporter-Edgecast
 
+
+> [!CAUTION]
+> This repository has been archived as of June 2026.  
+> If you wish to update or extend this project, please create a fork.
+
 ### What is this repository for?
 
 This is a Prometheus Exporter/Collector for Edgecast CDN.
